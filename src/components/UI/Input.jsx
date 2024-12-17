@@ -6,7 +6,7 @@ export default function Input(props){
             value={value}
             onChange={onChange}
             placeholder={placeholder}
-            className={`w-full bg-black text-gray-100 placeholder-gray-500 border border-gray-700 rounded-md py-2 px-4 focus:outline-none h-12 focus:ring-2 focus:ring-primary ${className}`}
+            className={`w-full text-black bg-black placeholder-gray-400 border focus:border-none border-gray-300 rounded-md py-2 px-4 focus:outline-none h-12 focus:ring-2 focus:ring-gray-200 ${className}`}
             />
     );
 }

@@ -8,8 +8,7 @@ const Home = () => {
   return (
     <>
     <div className="main-banner  relative h-screen w-full overflow-hidden" id="top">
-      <video
-        className="absolute top-0 left-0 w-full h-full object-cover"
+      <video className="absolute top-0 left-0 w-full h-full object-cover"
         autoPlay
         muted
         loop
@@ -28,15 +27,13 @@ const Home = () => {
             BUILD YOUR DREAM <span className="text-primary">PHYSIQUE</span>
           </h2>
           <div className="mt-6">
-            <Button className="bg-primary text-white px-6 py-3 uppercase text-lg hover:bg-red-600 transition" label = 'Book Appointment'/>
+            <Button className="bg-primary text-white px-6 py-3 uppercase text-lg hover:bg-primary-700 transition" label = 'Book Appointment'/>
           </div>
         </div>
       </div>
     </div>
     <ChooseUs />
     <FitnessGallery />
-    {/* <Address className=" bg-neutral-950 text-white md:flex justify-center gap-40 px-8 py-8"/> */}
-    
     </>
   );
 };

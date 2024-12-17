@@ -11,10 +11,13 @@ export default {
       },
       colors: {
         primary: {
-          DEFAULT: "#EF4444",
-          700: "#B91C1C", 
+          DEFAULT: "#d62839",
+          700: "#F17078",
         },
+        secondary: {
+         DEFAULT: "#FEF2F2" ,
       },
+    },
       container: {
         center: true,
         padding: {
