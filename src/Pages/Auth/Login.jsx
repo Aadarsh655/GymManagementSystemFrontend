@@ -131,7 +131,7 @@ export default function LoginPage() {
             type="submit"
             className="w-full"
             disabled={loading} // Disable button when loading
-            label={loading ? "Logging In..." : "LOG IN"} // Change text based on loading state
+            label={loading ? "Logging In...PLEASE WAIT" : "LOG IN"} // Change text based on loading state
           />
         </motion.form>
       </div>
