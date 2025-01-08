@@ -5,11 +5,10 @@ import Logo from "../../components/UI/Logo";
 import useAuthContext from "../../context/AuthContext";
 import ErrorAlert from "../../layouts/Error";
 
-export default function PasswordResetForm() {
+export default function forgetPassword() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState(null);
   const { forgetPassword, errors, clearErrors, loading } = useAuthContext(); 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     clearErrors();
@@ -17,7 +16,11 @@ export default function PasswordResetForm() {
 
     const message = await forgetPassword(email); 
     if (message) {
+      console.log("Setting status to:", message);
       setStatus(message); 
+    }
+    else{
+      console.log("No message returned; something went wrong.");
     }
   };
 
@@ -36,9 +39,10 @@ export default function PasswordResetForm() {
           and we will email you a password reset link that will allow you to
           choose a new one.
         </p>
-
+       
+        {status && <ErrorAlert className="bg-green-100 text-green-700 border-green-300" message={status} onClose={clearErrors} />}
         {errors && <ErrorAlert message={errors} onClose={clearErrors} />}
-        {status && <div className="text-green-600 text-center mb-4">{status}</div>}
+      
 
        
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -60,9 +64,9 @@ export default function PasswordResetForm() {
           {/* Submit Button */}
           <Button
             type="submit"
-            label={loading ? "Processing..." : "EMAIL PASSWORD RESET LINK"} // Show loading state
+            label={loading ? "Processing..." : "EMAIL PASSWORD RESET LINK"} 
             className={`w-full ${loading ? "bg-gray-400" : "bg-primary-500 hover:bg-primary-700"}`}
-            disabled={loading} // Disable button while loading
+            disabled={loading} 
           />
         </form>
       </div>
