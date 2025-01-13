@@ -12,9 +12,10 @@ import Login from "./Pages/Auth/Login";
 import ForgetPassword from "./Pages/Auth/ForgetPass";
 import PasswordReset from "./Pages/Auth/PasswordReset";
 import Users from "./Pages/Management/User";
+import Blog from "./Pages/Management/Blog";
 import Dashboard from "./Pages/Management/Dashboard";
 import Sidebar from "./layouts/Sidebar"
-
+import UserRegistrationForm from "./Pages/Management/UserRegistration";
 // Layout for website pages (with Navbar and Footer)
 function WebsiteLayout({ children }) {
   return (
@@ -57,6 +58,8 @@ function App() {
       {/* Management System Pages */}
       <Route path="/dashboard" element={<ManagementLayout><Dashboard /></ManagementLayout>} />
       <Route path="/users" element={<ManagementLayout><Users /></ManagementLayout>} />
+      <Route path ='/blog' element={<ManagementLayout><Blog /> </ManagementLayout>} />
+      <Route path="/register" element={<UserRegistrationForm />} />
       {/* 404 Page */}
       <Route path="*" element={<Nopage />} />
     </Routes>
