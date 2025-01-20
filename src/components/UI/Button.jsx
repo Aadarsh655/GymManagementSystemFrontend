@@ -1,4 +1,4 @@
-import { IoAddCircleSharp } from "react-icons/io5";
+import { IoMdAdd } from "react-icons/io";
 export default function Button(props) {
     const { label, className = '', onClick, type = 'button', disabled = false } = props;
 
@@ -22,13 +22,13 @@ export default function Button(props) {
 
 export function AddButton({ onClick }) {
   return (
-    <div className="w-full flex justify-end">
+    <div className=" flex justify-end">
       <button
         type="button"
         onClick={onClick} // onClick is passed as a prop
-        className="mt-6 mb-2 flex gap-2 py-1 text-primary bg-secondary border border-primary px-2 rounded-md font-medium items-center transition duration-200"
+        className="mt-6 mb-2 flex gap-2 text-primary bg-secondary border border-primary px-2 rounded-md font-medium items-center transition duration-200"
       >
-        <IoAddCircleSharp className="size-6 text-primary" />
+        <IoMdAdd className="size-6 text-primary" />
         ADD
       </button>
     </div>

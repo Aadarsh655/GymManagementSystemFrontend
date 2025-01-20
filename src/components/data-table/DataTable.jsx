@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+
+import React, { useState, useMemo } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -21,11 +22,20 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 export function DataTable({ columns, data, onEdit, onDelete }) {
   const [sorting, setSorting] = useState([]);
   const [selectedRows, setSelectedRows] = useState({});
+  const [pageIndex, setPageIndex] = useState(0); // Current page index
+  const [pageSize, setPageSize] = useState(10); // Rows per page
+
+  // Slice data for current page
+  const paginatedData = useMemo(() => {
+    const start = pageIndex * pageSize;
+    const end = start + pageSize;
+    return data.slice(start, end);
+  }, [data, pageIndex, pageSize]);
 
   const handleSelectAll = (isChecked) => {
     const newSelectedRows = {};
     if (isChecked) {
-      data.forEach((row, index) => {
+      paginatedData.forEach((row, index) => {
         newSelectedRows[index] = true;
       });
     }
@@ -39,7 +49,6 @@ export function DataTable({ columns, data, onEdit, onDelete }) {
     }));
   };
 
-  // Checkbox column for selecting rows
   const checkboxColumn = {
     accessorKey: "checkbox",
     header: ({ table }) => (
@@ -47,19 +56,17 @@ export function DataTable({ columns, data, onEdit, onDelete }) {
         type="checkbox"
         onChange={(e) => handleSelectAll(e.target.checked)}
         checked={
-          Object.keys(selectedRows).length === data.length &&
-          data.length > 0 // Ensure data exists
+          Object.keys(selectedRows).length === paginatedData.length &&
+          paginatedData.length > 0
         }
-         className="w-4 h-4 accent-primary cursor-pointer"
+        className="w-4 h-4 accent-primary cursor-pointer"
         title="Select All"
       />
     ),
     cell: ({ row }) => (
       <input
         type="checkbox"
-        onChange={(e) =>
-          handleRowSelect(row.index, e.target.checked)
-        }
+        onChange={(e) => handleRowSelect(row.index, e.target.checked)}
         checked={!!selectedRows[row.index]}
         className="w-4 h-4 accent-red-500 cursor-pointer"
         title="Select Row"
@@ -68,14 +75,12 @@ export function DataTable({ columns, data, onEdit, onDelete }) {
     enableSorting: false,
   };
 
-  // Action column for Edit and Delete
   const actionColumn = {
     accessorKey: "action",
     header: "Action",
     enableSorting: false,
     cell: ({ row }) => (
       <div className="flex gap-4 text-blue-600">
-        {/* Edit Icon */}
         <div className="flex gap-2 cursor-pointer">
           <FaEdit
             className="text-blue-600 text-lg"
@@ -83,8 +88,6 @@ export function DataTable({ columns, data, onEdit, onDelete }) {
           />
           <span>Edit</span>
         </div>
-
-        {/* Delete Icon */}
         <div className="flex gap-2 text-primary cursor-pointer">
           <FaTrash
             className="text-lg"
@@ -97,14 +100,14 @@ export function DataTable({ columns, data, onEdit, onDelete }) {
   };
 
   const table = useReactTable({
-    data,
-    columns: [checkboxColumn, ...columns, actionColumn], // Add Checkbox and Action columns
+    data: paginatedData, // Pass paginated data here
+    columns: [checkboxColumn, ...columns, actionColumn],
     state: {
       sorting,
     },
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(), // Enable sorting
+    getSortedRowModel: getSortedRowModel(),
   });
 
   return (
@@ -120,7 +123,6 @@ export function DataTable({ columns, data, onEdit, onDelete }) {
                       header.column.columnDef.header,
                       header.getContext()
                     )}
-                    {/* Simple Dropdown Menu for Sorting */}
                     {header.column.getCanSort() && (
                       <DropdownMenu
                         onAsc={() =>
@@ -160,6 +162,41 @@ export function DataTable({ columns, data, onEdit, onDelete }) {
           )}
         </TableBody>
       </Table>
+      {/* Pagination Controls */}
+      <div className="flex justify-between bg-white rounded-lg border items-center p-4">
+        <button
+          className="px-3 py-1 bg-gray-200 text-gray-800 rounded"
+          onClick={() => setPageIndex((prev) => Math.max(prev - 1, 0))}
+          disabled={pageIndex === 0}
+        >
+          Previous
+        </button>
+        <span>
+          Page {pageIndex + 1} of {Math.ceil(data.length / pageSize)}
+        </span>
+        <button
+          className="px-3 py-1 bg-gray-200 text-gray-800 rounded"
+          onClick={() =>
+            setPageIndex((prev) =>
+              Math.min(prev + 1, Math.ceil(data.length / pageSize) - 1)
+            )
+          }
+          disabled={pageIndex >= Math.ceil(data.length / pageSize) - 1}
+        >
+          Next
+        </button>
+        <select
+          value={pageSize}
+          onChange={(e) => setPageSize(Number(e.target.value))}
+          className="ml-4 border rounded px-2 py-1"
+        >
+          {[10, 20, 50].map((size) => (
+            <option key={size} value={size}>
+              Show {size}
+            </option>
+          ))}
+        </select>
+      </div>
     </div>
   );
 }

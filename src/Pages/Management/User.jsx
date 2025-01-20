@@ -5,7 +5,7 @@ import UserRegistrationForm from "./UserRegistration";
 import apiRequest from "@/api/axios"; // Replace with your API request function
 import { IoAddCircleSharp } from "react-icons/io5";
 import {AddButton} from "../../components/UI/Button"
-
+import avatorImg from "../../assets/avator.png"
 export default function User() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [data, setData] = useState([]); // State to store user data
@@ -38,6 +38,15 @@ export default function User() {
         console.log("Delete action triggered for:", row);
         // Add your delete logic here
     };
+        const formFields = [
+        { name: 'name', label: 'Full Name', type: 'text', placeholder: 'Enter full name', required: true },
+        { name: 'email', label: 'Email', type: 'email', placeholder: 'Enter email address', required: true },
+        { name: 'role', label: 'Role', type: 'select', placeholder: 'Select role', required: true, options: [
+            { value: 'Member', label: 'Member' },
+            { value: 'Admin', label: 'Admin' },
+        ] },
+        { image: 'image', label: 'Profile Photo', type: 'file', accept: 'image/*' },
+    ];
 
     const columns = [
         {
@@ -50,9 +59,9 @@ export default function User() {
             enableSorting: false,
             cell: (info) => (
                 <img
-                    src={info.row.original.image_url || "/default-avatar.png"} // Replace with default image if null
+                src={info.row.original.image_url || avatorImg} // Replace with default image if null
                     alt="Profile"
-                    className="w-10 h-10 rounded-full"
+                    className="w-8 h-8 rounded-full"
                 />
             ),
         },
@@ -75,9 +84,12 @@ export default function User() {
     ];
 
     return (
-        <div className="h-screen">
-        <h1 className="text-2xl sticky font-bold mb-4">User List</h1>
+        <div className="h-screen ">
+            <div className=" flex">
+
+        <h1 className=" text-2xl w-full mt-8 font-semibold px-2 mb-4">User List</h1>
           <AddButton onClick={() => setIsModalOpen(true)}  />
+            </div>
           <Search />
          
         {loading ? (
@@ -88,11 +100,15 @@ export default function User() {
           <DataTable columns={columns} data={data} />
         )}
         {isModalOpen && (
-          <UserRegistrationForm
-            isModalOpen={isModalOpen}
-            setIsModalOpen={setIsModalOpen}
+        <UserRegistrationForm
+                    isModalOpen={isModalOpen}
+                    setIsModalOpen={setIsModalOpen}
+                    apiEndpoint="register"
+                    formFields={formFields}
           />
         )}
       </div>
     );
 }
+
+

@@ -4,9 +4,12 @@ const API_BASE_URL = "http://localhost:8000/api";
 
 const apiRequest = async (endpoint, method = "GET", body = null, token = null) => {
   const headers = {
-    "Content-Type": "application/json",
+    // "Content-Type": "application/json",
     ...(token && { Authorization: `Bearer ${token}` }),
   };
+  if (!(body instanceof FormData)) {
+    headers["Content-Type"] = "application/json";
+  }
 
   try {
     const response = await axios({

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Search from "@/layouts/Search";
 import DataTable from "@/components/data-table/DataTable";
 import apiRequest from "@/api/axios";
+import UserRegistrationForm from "./UserRegistration";
 export default function Blog(){
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,7 +14,7 @@ export default function Blog(){
         // Fetch user data from the API
         const fetchUsers = async () => {
             try {
-                const response = await apiRequest("blog", "GET"); // Replace "users" with your API endpoint
+                const response = await apiRequest("blog-table", "GET"); // Replace "users" with your API endpoint
                 setData(response); // Assuming the API returns an array of users
             } catch (err) {
                 console.error("Failed to fetch users:", err.message);
@@ -26,6 +27,28 @@ export default function Blog(){
         fetchUsers();
     }, []);
 
+    const formFields=    [   {
+        name: 'title',
+        label: 'Title',
+        type: 'text',
+        placeholder: 'Enter the blog title',
+        required: true,
+    },
+    {
+        name: 'image',
+        label: 'Image',
+        type: 'file',
+        image: 'image',
+        accept: 'image/*',
+    },
+    {
+        name:'content',
+        label: 'Content',
+        type: 'textarea',
+        placeholder: 'Enter the Description',
+        required: true,
+    },
+    ]
     const columns = [
         {
             accessorKey: "id",
@@ -48,7 +71,7 @@ export default function Blog(){
             header: "Title",
         },
         {
-            accessorKey: "description",
+            accessorKey: "content",
             header: "Description",
         },
         {
@@ -58,8 +81,11 @@ export default function Blog(){
     ];
     return(
         <div className="h-screen">
-            <h1 className="text-2xl sticky font-bold mb-4">Blogs</h1>
+            <div className="flex">
+
+            <h1 className="text-2xl w-full sticky mt-8 font-semibold px-2 mb-4">Blogs</h1>
             <AddButton onClick={() => setIsModalOpen(true)}/>
+            </div>
             <Search /> 
                     {loading ? (
                       <p>Loading...</p>
@@ -72,6 +98,8 @@ export default function Blog(){
           <UserRegistrationForm
             isModalOpen={isModalOpen}
             setIsModalOpen={setIsModalOpen}
+            formFields={formFields}
+            apiEndpoint= "blog"
           />
         )}
    

@@ -3,16 +3,45 @@ import { Users, HandCoins, UserPlus, UserX, MoreHorizontal } from 'lucide-react'
 import { MetricCard } from '../../components/UI/MetricCard'
 import { LineChart } from '../../components/UI/linechart'
 import { DonutChart } from '../../components/UI/Donut-chart'
-
+import { useState,useEffect } from "react"
+import apiRequest from "@/api/axios"
+import Expire from "../../layouts/Expire"
 function Dashboard() {
+  const [userCount, setUserCount] = useState(0); // State to store the user count
+  const [recentMembers, setRecentMembers] =useState(0);
+  useEffect(() => {
+    // Fetch user data from the API
+    const fetchTotalUsers = async () => {
+        try {
+            const response = await apiRequest("user-count", "GET"); // Replace "users" with your API endpoint
+            setUserCount(response.user_count); // Assuming the API returns an array of users
+        } catch (err) {
+            console.log("Failed to fetch users:", err.message);
+            
+        // Stop loading spinner
+        }
+    };
+    const fetchRecentMembers = async()=>{
+      try{
+        const response = await apiRequest('recent-members','GET');
+        setRecentMembers(response.recent_members);
+      }
+      catch(err){
+        console.log("Failed to fetch recent members",err.message);
+      }
+    }
+    fetchRecentMembers();
+    fetchTotalUsers();
+  }, []);
+
   return (
-    <div className="py-6 space-y-6">
+    <div className="py-3 space-y-6">
       {/* Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <MetricCard 
           icon={<Users className="w-6 h-6 text-blue-500" />}
           iconBg="bg-blue-50"
-          value="178"
+          value={userCount}
           label="Total Members"
         />
         <MetricCard 
@@ -24,7 +53,7 @@ function Dashboard() {
         <MetricCard 
           icon={<UserPlus className="w-6 h-6 text-coral-500" />}
           iconBg="bg-red-50"
-          value="56"
+          value={recentMembers}
           label="Recent Members"
         />
         <MetricCard 
@@ -53,6 +82,7 @@ function Dashboard() {
           <DonutChart />
         </Card>
       </div>
+      <Expire />
     </div>
   )
 }

@@ -36,6 +36,7 @@ export const AuthProvider = ({ children }) => {
       const response = await apiRequest("login", "POST", { email, password });
       if (response.token) {
         localStorage.setItem("authToken", response.token);
+        localStorage.setItem("id", response.user.id);
         navigate("/dashboard");
       }
     } catch (error) {
