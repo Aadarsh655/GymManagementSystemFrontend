@@ -48,7 +48,7 @@ function UserRegistrationForm({ isModalOpen, setIsModalOpen, formFields, apiEndp
     return (
         isModalOpen && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                <div className="bg-white p-6 rounded-lg max-w-md w-full">
+                <div className="bg-gradient-to-tr from-white  via-red-50 to-red-100 p-10 rounded-lg max-w-xl w-full">
                     <h2 className="text-xl font-bold mb-4">Form</h2>
                     {errors && <ErrorAlert message={errors} onClose={clearErrors} />}
                     <form onSubmit={handleSubmit} className="space-y-4">

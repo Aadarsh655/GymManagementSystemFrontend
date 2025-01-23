@@ -73,6 +73,11 @@ export default function Blog(){
         {
             accessorKey: "content",
             header: "Description",
+            cell: (info) => {
+                const description = info.getValue(); // Get the content value
+                const truncated = description.split(" ").slice(0, 4).join(" ") + "........"; // Truncate after 4 words
+                return <span>{truncated}</span>;
+            },
         },
         {
             accessorKey: "slug",

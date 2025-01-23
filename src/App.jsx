@@ -58,7 +58,7 @@ function App() {
       {/* Authentication Pages */}
       <Route path="/login" element={<Login />} />
       <Route path="/forgot-password" element={<ForgetPassword />} />
-      <Route path="/password-reset" element={<PasswordReset />} />
+      <Route path="/password-reset/:token" element={<PasswordReset />} />
 
       {/* Management System Pages */}
       <Route path="/dashboard" element={<ManagementLayout><Dashboard /></ManagementLayout>} />

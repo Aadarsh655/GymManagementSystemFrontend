@@ -36,15 +36,21 @@ export const AuthProvider = ({ children }) => {
       const response = await apiRequest("login", "POST", { email, password });
       if (response.token) {
         localStorage.setItem("authToken", response.token);
-        localStorage.setItem("id", response.user.id);
+        // localStorage.setItem("id", response.user.id);
         navigate("/dashboard");
       }
     } catch (error) {
-      setErrors(error.response?.data?.message || "Invalid email or password.");
-    } finally {
-      setLoading(false);
+      if (!error.response) {
+        // Network error
+        setErrors("Invalid Email or Password.");
+      } else {
+        // Other errors
+        setErrors(error.response.data?.message || "Something went wrong.");
+      }
     }
-  };
+  }    
+
+  // const resetPassword = async({[password]})
 
 
   const forgetPassword = async (email) => {

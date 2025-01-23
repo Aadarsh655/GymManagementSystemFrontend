@@ -1,11 +1,20 @@
 import { AddButton } from "@/components/UI/Button"
 import Search from "@/layouts/Search"
 import DataTable from "@/components/data-table/DataTable"
+import apiRequest from "@/api/axios";
+import { useState,useEffect } from "react";
 export default function Payments(){
+    // const[isModalOpen,setIsModalOpen] = useState(false);
+    const[data,setData] = useState([]);
+    const[error,setError] = useState(null);
+    const[loading,setLoading] = useState(true);
+
+   
+      
 
 const columns =[
     {
-        accessorKey: "name",
+        accessorKey: "user_name",
         header: "Name",
     },
     {
@@ -25,7 +34,7 @@ const columns =[
         header: "Paid",
     },
     {
-        accessorKey: "due",
+        accessorKey: "due_amount",
         header: "Due",
     },
     {
@@ -42,15 +51,26 @@ const columns =[
     }
 ];
 
-const data = [
-    { name: "John Doe", membership_name: "Gold", amount: 4500, discount: 300, paid_amount: 4200, due: 0, status: "Paid", paid_date: "2025-01-01", expire_date: "2025-07-01" },
-    { name: "Jane Smith", membership_name: "Silver", amount: 3200, discount: 200, paid_amount: 3000, due: 0, status: "Paid", paid_date: "2025-01-05", expire_date: "2025-07-05" },
-    { name: "Alice Johnson", membership_name: "Basic", amount: 1500, discount: 100, paid_amount: 1200, due: 300, status: "Partial", paid_date: "2025-01-10", expire_date: "2025-07-10" },
-    { name: "Robert Brown", membership_name: "Platinum", amount: 5000, discount: 500, paid_amount: 4500, due: 0, status: "Paid", paid_date: "2025-01-15", expire_date: "2025-07-15" },
-    { name: "Emily Davis", membership_name: "Gold", amount: 3800, discount: 300, paid_amount: 3500, due: 0, status: "Paid", paid_date: "2025-01-20", expire_date: "2025-07-20" },
-];
+useEffect(() => {
+    const fetchPayment = async () => {
+      try {
+        const response = await apiRequest("payments", "GET");
+        console.log("API Response:", response); // Debug the API response
+  
+        // Extract the array from the response and set it as data
+        setData(response.payments || []);
+      } catch (err) {
+        console.error("Failed to fetch payments:", err.message);
+        setError("Failed to load payment data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPayment();
+  }, []);
+  
 
-    
+
     return(
         <div className="h-screen ">
         <div className=" flex">
@@ -59,6 +79,6 @@ const data = [
       <AddButton  />
         </div>
       <Search />
-      <DataTable columns={columns} data={data}/>
+          <DataTable columns={columns} data={data} />
   </div>
     )}

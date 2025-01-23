@@ -3,7 +3,6 @@ import DataTable from "@/components/data-table/DataTable";
 import Search from "../../layouts/Search";
 import UserRegistrationForm from "./UserRegistration";
 import apiRequest from "@/api/axios"; // Replace with your API request function
-import { IoAddCircleSharp } from "react-icons/io5";
 import {AddButton} from "../../components/UI/Button"
 import avatorImg from "../../assets/avator.png"
 export default function User() {
@@ -41,6 +40,26 @@ export default function User() {
         const formFields = [
         { name: 'name', label: 'Full Name', type: 'text', placeholder: 'Enter full name', required: true },
         { name: 'email', label: 'Email', type: 'email', placeholder: 'Enter email address', required: true },
+        {name: "age", label:"Age", type: "number", placeholder:"Enter your age", required: true},
+        {
+            name: "blood_group",
+            label: "Blood Group",
+            type: "select",
+            options: [
+              { value: "A+", label: "A+" },
+              { value: "A-", label: "A-" },
+              { value: "B+", label: "B+" },
+              { value: "B-", label: "B-" },
+              { value: "AB+", label: "AB+" },
+              { value: "AB-", label: "AB-" },
+              { value: "O+", label: "O+" },
+              { value: "O-", label: "O-" }
+            ],
+            placeholder: "Select your blood group",
+            required: true
+          },
+          {name:"gender",label:"Gender", type:"select", options:[{value:"Male",label:"Male"},{value:"Female", label: "Female"}], placeholder:"Select your gender", required: true},
+          
         { name: 'role', label: 'Role', type: 'select', placeholder: 'Select role', required: true, options: [
             { value: 'Member', label: 'Member' },
             { value: 'Admin', label: 'Admin' },
@@ -72,6 +91,18 @@ export default function User() {
         {
             accessorKey: "email",
             header: "Email",
+        },
+        {
+            accessorKey: "age",
+            header: "Age",
+        },
+        {
+            accessorKey:"gender",
+            header: "Gender",
+        },
+        {
+            accessorKey:"blood_group",
+            header:"Blood Group",
         },
         {
             accessorKey: "role",
