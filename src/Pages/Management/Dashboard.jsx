@@ -14,11 +14,17 @@ function Dashboard() {
   });
   const [lineChartData, setLineChartData] = useState([]);
   const [donutChartData, setDonutChartData] =useState([]);
+  const [expiredMembers,setExpiredMembers] =useState([]);
+  const [expiringMembers,setExpiringMembers] =useState([]);
   useEffect(() => {
     // Fetch user data from the API
     const fetchDashboardCount = async()=>{
       try{
         const response = await apiRequest('dashboardCount','GET');
+        const expiredMembersData = response.data.expired_members || [];
+        const expiringMembersData = response.data.expiring_members || [];
+        setExpiredMembers(expiredMembersData);
+        setExpiringMembers(expiringMembersData);
         setDashboardData({
           userCount: response.data.user_count || 0,
           recentMembers: response.data.recent_members || 0,
@@ -95,10 +101,9 @@ function Dashboard() {
             centerSubtext="Breakdown"/>
         </Card>
       </div>
-      <Expire />
+      <Expire expiredMembers={expiredMembers} expiringMembers={expiringMembers}/>
     </div>
   )
 }
-
 export default Dashboard;
 

@@ -1,5 +1,4 @@
-
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -17,46 +16,59 @@ import {
 } from "@/components/ui/table";
 
 import { DropdownMenu } from "../UI/DropDown";
-import { FaEdit, FaTrash } from "react-icons/fa";
 
-export function DataTable({ columns, data, onEdit, onDelete }) {
+export function DataTable({ columns, data, setSelectedRow, handleEdit }) {
+  const [selectedRowIndexes, setSelectedRowIndexes] = useState({});
   const [sorting, setSorting] = useState([]);
-  const [selectedRows, setSelectedRows] = useState({});
-  const [pageIndex, setPageIndex] = useState(0); // Current page index
-  const [pageSize, setPageSize] = useState(10); // Rows per page
+  const [pageIndex, setPageIndex] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
 
-  // Slice data for current page
   const paginatedData = useMemo(() => {
     const start = pageIndex * pageSize;
     const end = start + pageSize;
     return data.slice(start, end);
   }, [data, pageIndex, pageSize]);
 
+  useEffect(() => {
+    const selectedRows = Object.keys(selectedRowIndexes).map((index) => paginatedData[index]);
+    
+    if (selectedRows.length === 1) {
+      setSelectedRow(selectedRows[0]);
+    } else {
+      setSelectedRow(null);
+    }
+  }, [selectedRowIndexes, paginatedData, setSelectedRow]);
+
   const handleSelectAll = (isChecked) => {
     const newSelectedRows = {};
     if (isChecked) {
-      paginatedData.forEach((row, index) => {
+      paginatedData.forEach((_, index) => {
         newSelectedRows[index] = true;
       });
     }
-    setSelectedRows(newSelectedRows);
+    setSelectedRowIndexes(newSelectedRows);
   };
 
   const handleRowSelect = (index, isChecked) => {
-    setSelectedRows((prev) => ({
-      ...prev,
-      [index]: isChecked,
-    }));
+    setSelectedRowIndexes((prev) => {
+      const newSelectedRows = { ...prev };
+      if (isChecked) {
+        newSelectedRows[index] = true;
+      } else {
+        delete newSelectedRows[index];
+      }
+      return newSelectedRows;
+    });
   };
 
   const checkboxColumn = {
     accessorKey: "checkbox",
-    header: ({ table }) => (
+    header: () => (
       <input
         type="checkbox"
         onChange={(e) => handleSelectAll(e.target.checked)}
         checked={
-          Object.keys(selectedRows).length === paginatedData.length &&
+          Object.keys(selectedRowIndexes).length === paginatedData.length &&
           paginatedData.length > 0
         }
         className="w-4 h-4 accent-primary cursor-pointer"
@@ -67,7 +79,7 @@ export function DataTable({ columns, data, onEdit, onDelete }) {
       <input
         type="checkbox"
         onChange={(e) => handleRowSelect(row.index, e.target.checked)}
-        checked={!!selectedRows[row.index]}
+        checked={!!selectedRowIndexes[row.index]}
         className="w-4 h-4 accent-red-500 cursor-pointer"
         title="Select Row"
       />
@@ -75,95 +87,87 @@ export function DataTable({ columns, data, onEdit, onDelete }) {
     enableSorting: false,
   };
 
-  const actionColumn = {
-    accessorKey: "action",
-    header: "Action",
-    enableSorting: false,
-    cell: ({ row }) => (
-      <div className="flex gap-4 text-blue-600">
-        <div className="flex gap-2 cursor-pointer">
-          <FaEdit
-            className="text-blue-600 text-lg"
-            onClick={() => onEdit && onEdit(row.original)}
-          />
-          <span>Edit</span>
-        </div>
-        <div className="flex gap-2 text-primary cursor-pointer">
-          <FaTrash
-            className="text-lg"
-            onClick={() => onDelete && onDelete(row.original)}
-          />
-          <span>Delete</span>
-        </div>
-      </div>
-    ),
-  };
-
   const table = useReactTable({
-    data: paginatedData, // Pass paginated data here
-    columns: [checkboxColumn, ...columns, actionColumn],
-    state: {
-      sorting,
-    },
+    data: paginatedData,
+    columns: [checkboxColumn, ...columns],
+    state: { sorting },
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
   });
 
+  const handleEditClick = () => {
+    const selectedRowsCount = Object.keys(selectedRowIndexes).length;
+
+    if (selectedRowsCount === 0) {
+      alert("Please select a row to edit.");
+      return;
+    }
+
+    if (selectedRowsCount > 1) {
+      alert("Only one row can be selected for editing.");
+      return;
+    }
+
+    // Proceed with editing the selected row
+    handleEdit();
+  };
+
   return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <TableHead key={header.id}>
-                  <div className="flex items-center">
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-                    {header.column.getCanSort() && (
-                      <DropdownMenu
-                        onAsc={() =>
-                          table.setSorting([{ id: header.column.id, desc: false }])
-                        }
-                        onDesc={() =>
-                          table.setSorting([{ id: header.column.id, desc: true }])
-                        }
-                      />
-                    )}
-                  </div>
-                </TableHead>
-              ))}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
+    <div className="flex flex-col h-[70%]">
+      <div className="flex-grow overflow-auto rounded-md border bg-white">
+        <Table className="h-full">
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    <div className="flex items-center">
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                      {header.column.getCanSort() && (
+                        <DropdownMenu
+                          onAsc={() =>
+                            table.setSorting([{ id: header.column.id, desc: false }])
+                          }
+                          onDesc={() =>
+                            table.setSorting([{ id: header.column.id, desc: true }])
+                          }
+                        />
+                      )}
+                    </div>
+                  </TableHead>
                 ))}
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length + 2} className="h-24 text-center">
-                No results.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-      {/* Pagination Controls */}
-      <div className="flex justify-between bg-white rounded-lg border items-center p-4">
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.index}
+                  className={selectedRowIndexes[row.index] ? "bg-gray-50" : ""}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={columns.length + 2} className="h-24 text-center">
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+      <div className="flex justify-between bg-white rounded-lg border items-center p-4 mt-4">
         <button
           className="px-3 py-1 bg-gray-200 text-gray-800 rounded"
           onClick={() => setPageIndex((prev) => Math.max(prev - 1, 0))}
@@ -202,3 +206,4 @@ export function DataTable({ columns, data, onEdit, onDelete }) {
 }
 
 export default DataTable;
+

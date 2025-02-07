@@ -20,6 +20,7 @@ import Settings from "./Pages/Management/Settings";
 import UserRegistrationForm from "./Pages/Management/UserRegistration";
 import Payments from "./Pages/Management/Payment";
 import { Service } from "./Pages/Management/Service";
+import Enquiry from "./Pages/Management/Enquiry";
 // Layout for website pages (with Navbar and Footer)
 function WebsiteLayout({ children }) {
   return (
@@ -37,7 +38,7 @@ function ManagementLayout({ children }) {
   return (
     <div className="flex min-h-screen"> {/* Flex container for sidebar and content */}
       <Sidebar />
-      <main className="flex-1 bg-gray-50 px-6"> 
+      <main className="flex-1 bg-gray-50 px-6 z-99999"> 
         <Header />{/* Main content area */}
         {children}
       </main>
@@ -67,6 +68,7 @@ function App() {
       <Route path ='/payments' element={<ManagementLayout><Payments /></ManagementLayout>} />
       <Route path ='/settings' element={<ManagementLayout><Settings /></ManagementLayout>} />
       <Route path ="/service" element={<ManagementLayout><Service /></ManagementLayout>} />
+      <Route path ="/enquiries" element={<ManagementLayout><Enquiry /></ManagementLayout>} />
       <Route path="/register" element={<UserRegistrationForm />} />
       {/* 404 Page */}
       <Route path="*" element={<Nopage />} />

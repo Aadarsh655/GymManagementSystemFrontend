@@ -1,14 +1,53 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Input from "../../components/UI/Input";
 import Button from "../../components/UI/Button";
 import Address from '../../layouts/Address';
 import gymImg from '../../assets/gym.jpg';
+import apiRequest from '@/api/axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';  // Don't forget to import the styles!
+
 const ContactPage = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    comment: ''
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prevData => ({
+      ...prevData,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const response = await apiRequest('enquiries', "POST", formData);
+      toast.success("Your enquiry has been submitted successfully!");  // Show success toast
+      setFormData({
+        name: '',
+        email: '',
+        comment: ''
+      });
+    } catch (error) {
+      toast.error(error.message || 'Something went wrong');  // Show error toast
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-zinc-900 text-white">
       {/* Hero Section */}
       <div className="relative h-[400px] w-full overflow-hidden">
-        <img src= {gymImg} alt="Gym background"
+        <img src={gymImg} alt="Gym background"
           className="w-full h-full object-cover brightness-50"/>
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
           <h1 className="mb-6 text-5xl font-bold tracking-wider">
@@ -32,10 +71,31 @@ const ContactPage = () => {
             </div>
           </div>
           <div className='space-y-7 m-5 h-fit lg:w-[40%]'>
-            <Input placeholder="Name" />
-            <Input placeholder='E-mail' />
-            <Input placeholder='Comment' className='h-[100px]'/>
-            <Button label='SUBMIT' className='w-full'/>
+            <Input 
+              name="name" 
+              value={formData.name} 
+              onChange={handleInputChange} 
+              placeholder="Name" 
+            />
+            <Input 
+              name="email" 
+              value={formData.email} 
+              onChange={handleInputChange} 
+              placeholder="E-mail" 
+            />
+            <Input 
+              name="comment" 
+              value={formData.comment} 
+              onChange={handleInputChange} 
+              placeholder="Comment" 
+              className="h-[100px]" 
+            />
+            <Button
+              label={isSubmitting ? 'Submitting...' : 'SUBMIT'}
+              className="w-full"
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+            />
           </div>
         </div>
       </div>
@@ -51,10 +111,11 @@ const ContactPage = () => {
           referrerPolicy="no-referrer-when-downgrade"
         ></iframe>
       </div>
+
+      {/* Toast Notifications */}
+      <ToastContainer />
     </div>
   );
 };
 
 export default ContactPage;
-
-

@@ -1,4 +1,5 @@
-import React from 'react';
+import React from "react";
+import { CheckCircle, XCircle } from "lucide-react"; // Import icons
 
 export function PriceCard({ title, price, features }) {
   return (
@@ -9,17 +10,25 @@ export function PriceCard({ title, price, features }) {
           <span className="text-4xl font-bold text-gray-900">₹{price}</span>
           <span className="text-xl font-semibold text-gray-600">/month</span>
         </div>
+
+        {/* Facilities List */}
         <ul className="space-y-3">
+          
           {features.map((feature, index) => (
-            <li key={index} className="flex items-center text-gray-700">
-              <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-              </svg>
-              {feature}
+            <li key={index} className="flex items-center">
+              {feature.available ? (
+                <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
+              ) : (
+                <XCircle className="w-5 h-5 text-red-500 mr-2" />
+              )}
+              <span className={feature.available ? "text-gray-700" : "text-gray-400 line-through"}>
+                {feature.name}
+              </span>
             </li>
           ))}
         </ul>
       </div>
+
       <div className="px-6 pb-6">
         <button className="w-full bg-primary text-white rounded-md py-2 font-semibold hover:bg-primary-700 transition-colors duration-300">
           Choose Plan

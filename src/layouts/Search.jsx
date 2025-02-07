@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SearchIcon } from 'lucide-react';
+import { SearchIcon, XIcon } from 'lucide-react';
 
 const Input = React.forwardRef((props, ref) => (
   <input
@@ -20,35 +20,41 @@ const Button = ({ children, ...props }) => (
   </button>
 );
 
-export default function Search() {
-  const [searchFocused, setSearchFocused] = useState(false);
+export default function Search({ onSearch }) {
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    // Implement search functionality here
-    console.log('Search button clicked');
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    onSearch(query); 
+  };
+
+  const handleClear = () => {
+    setSearchQuery('');
+    onSearch(''); 
   };
 
   return (
-    <div className="flex items-center justify-between mt-2 mb-2 space-x-4">
+    <div className=" items-center justify-between w-[30%] mt-2 mb-2 space-x-4">
       <div className="relative flex-grow">
-        {/* Input Field */}
         <Input
           type="text"
+          value={searchQuery}
           placeholder="Search by Name or Phone Number"
-          onFocus={() => setSearchFocused(true)}
-          onBlur={() => setSearchFocused(false)}
+          onChange={handleSearchChange}
         />
         
-        {/* Search Icon */}
         <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+        
+        {/* Clear Icon */}
+        {searchQuery && (
+          <XIcon
+            onClick={handleClear}
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 cursor-pointer"
+          />
+        )}
       </div>
-      
-      {/* Search Button */}
-      <Button type="button" onClick={handleSearch}>
-        Search
-      </Button>
+  
     </div>
   );
 }
-

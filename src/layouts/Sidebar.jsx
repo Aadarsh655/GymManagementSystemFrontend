@@ -29,7 +29,7 @@ export default function Sidebar({ children }) {
         <div className="flex min-h-screen">
             <aside
                 className={cn(
-                    `fixed left-0 top-0 h-screen bg-white shadow-sm transition-all duration-300`,
+                    `fixed left-0 top-0 h-screen z-[100] bg-white shadow-sm transition-all duration-300`,
                     isCollapsed ? "w-20" : "w-60 md:w-72 lg:w-60"
                 )}
             >

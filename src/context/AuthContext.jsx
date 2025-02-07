@@ -49,10 +49,6 @@ export const AuthProvider = ({ children }) => {
       }
     }
   }    
-
-  // const resetPassword = async({[password]})
-
-
   const forgetPassword = async (email) => {
     setErrors(null);
     setLoading(true);

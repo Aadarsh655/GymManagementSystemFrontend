@@ -5,37 +5,122 @@ import UserRegistrationForm from "./UserRegistration";
 import apiRequest from "@/api/axios"; // Replace with your API request function
 import {AddButton} from "../../components/UI/Button"
 import avatorImg from "../../assets/avator.png"
-export default function User() {
+import { CirclePlus, FilePenLine, Trash2, Archive } from "lucide-react";
+import { ActionButtons } from "../../components/UI/Button";
+
+ function User() {
+    const [selectedRow, setSelectedRow] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [data, setData] = useState([]); // State to store user data
-    const [loading, setLoading] = useState(true); // Loading state
-    const [error, setError] = useState(null); // Error state
+    const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null);
+    const [formData, setFormData] = useState({});
+    const [searchQuery, setSearchQuery] = useState('');
 
+    const handleSearch = (query) => {
+        setSearchQuery(query);
+      };
+    
+      const filteredData = searchQuery
+      ? data.filter((user) =>
+          user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          user.email.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      : data;
     useEffect(() => {
-        // Fetch user data from the API
-        const fetchUsers = async () => {
-            try {
-                const response = await apiRequest("user", "GET"); // Replace "users" with your API endpoint
-                setData(response); // Assuming the API returns an array of users
-            } catch (err) {
-                console.error("Failed to fetch users:", err.message);
-                setError("Failed to load user data.");
-            } finally {
-                setLoading(false); // Stop loading spinner
-            }
-        };
-
         fetchUsers();
     }, []);
-
-    const handleEdit = (row) => {
-        console.log("Edit action triggered for:", row);
-        // Add your edit logic here
+    
+    const fetchUsers = async () => {
+        try {
+            const response = await apiRequest("user", "GET"); 
+            const formattedUsers = response.map(user => ({
+                ...user,
+                image_url: user.image ? `http://localhost:8000/storage/${user.image}` : avatorImg, 
+            }));
+            setData(formattedUsers);
+        } catch (err) {
+            console.error("Failed to fetch users:", err.message);
+            setError("Failed to load user data.");
+        } finally {
+            setLoading(false);
+        }
     };
+    
+
+    const handleAdd = () => {
+    setSelectedRow(null); 
+    setIsModalOpen(true); 
+};
+
+const handleEdit = () => {
+    if (!selectedRow) {
+        alert("Please select a row to edit.");
+        return;
+    }
+    console.log("Selected Row for Edit:", selectedRow);
+
+    const formattedRow = {
+        id: selectedRow.id,
+        name: selectedRow.name,
+        email: selectedRow.email,
+        age: selectedRow.age,
+        blood_group: selectedRow.blood_group,
+        gender: selectedRow.gender,
+        role: selectedRow.role,
+        image: selectedRow.image,
+        imagePreview: selectedRow.image_url || avatorImg,
+    };
+
+    setSelectedRow(formattedRow);
+    setIsModalOpen(true);
+};
+
+const handleSubmit = async (formData, setError, setIsModalOpen) => {
+    const formDataToSend = new FormData();
+    for (const [key, value] of Object.entries(formData)) {
+        if (key === "image" && value) {
+            formDataToSend.append("image", value);
+        } else {
+            formDataToSend.append(key, value);
+        }
+    }
+
+    try {
+        let response;
+        if (selectedRow?.id) {
+            if (!formData.image) {
+                formDataToSend.delete("image"); s
+            }
+            console.log("Form Data Sent:", Object.fromEntries(formDataToSend));
+
+            response = await apiRequest(`register/${selectedRow.id}`, "POST", formDataToSend);
+            
+            // setFormData((prevData) =>
+            //     prevData.map((user) =>
+            //         user.id === selectedRow.id ? { ...user, ...Object.fromEntries(formDataToSend) } : user
+            //     )
+            // );
+            
+        } else {
+            response = await apiRequest("register", "POST", formDataToSend);
+        }
+
+        console.log("API Response:", response);
+        setError(null);
+        setIsModalOpen(false);
+        
+        fetchUsers(); 
+        setData((prevData) => [...prevData]);
+    } catch (error) {
+        setError(error.response?.data?.message || "An error occurred.");
+    }
+};
+
+
 
     const handleDelete = (row) => {
         console.log("Delete action triggered for:", row);
-        // Add your delete logic here
     };
         const formFields = [
         { name: 'name', label: 'Full Name', type: 'text', placeholder: 'Enter full name', required: true },
@@ -64,7 +149,7 @@ export default function User() {
             { value: 'Member', label: 'Member' },
             { value: 'Admin', label: 'Admin' },
         ] },
-        { image: 'image', label: 'Profile Photo', type: 'file', accept: 'image/*' },
+        { name: 'image', label: 'Profile Photo', type: 'file', accept: 'image/*' },
     ];
 
     const columns = [
@@ -78,7 +163,7 @@ export default function User() {
             enableSorting: false,
             cell: (info) => (
                 <img
-                src={info.row.original.image_url || avatorImg} // Replace with default image if null
+                src={info.row.original.image_url || avatorImg} 
                     alt="Profile"
                     className="w-8 h-8 rounded-full"
                 />
@@ -116,19 +201,28 @@ export default function User() {
 
     return (
         <div className="h-screen ">
-            <div className=" flex">
+            <div className=" flex mt-3">
 
-        <h1 className=" text-2xl w-full mt-8 font-semibold px-2 mb-4">User List</h1>
-          <AddButton onClick={() => setIsModalOpen(true)}  />
+        <h1 className=" text-2xl w-full mt-4 font-semibold px-2 mb-4">User List</h1>
+        <div className=" flex gap-1">
+        <ActionButtons
+        actions={[
+            { onClick: handleAdd, icon: CirclePlus, text: "ADD" },
+            { onClick: handleEdit, icon: FilePenLine, text: "EDIT" },
+            { onClick: handleDelete, icon: Trash2, text: "DELETE" },
+            { icon: Archive, text: "ARCHIVE" }
+            ]}
+        />
+          </div>
             </div>
-          <Search />
+            <Search onSearch={handleSearch} />
          
         {loading ? (
           <p>Loading...</p>
         ) : error ? (
           <p className="text-red-500">{error}</p>
         ) : (
-          <DataTable columns={columns} data={data} />
+          <DataTable columns={columns} data={filteredData} setSelectedRow={setSelectedRow} />
         )}
         {isModalOpen && (
         <UserRegistrationForm
@@ -136,6 +230,8 @@ export default function User() {
                     setIsModalOpen={setIsModalOpen}
                     apiEndpoint="register"
                     formFields={formFields}
+                    initialValues={selectedRow}
+                    handleSubmit={handleSubmit}
           />
         )}
       </div>
@@ -143,3 +239,4 @@ export default function User() {
 }
 
 
+export default User;
