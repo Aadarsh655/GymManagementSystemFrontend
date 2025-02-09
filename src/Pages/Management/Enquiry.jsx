@@ -96,7 +96,7 @@ export default function Enquiry() {
                 <UserRegistrationForm isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} 
                     apiEndpoint="enquiries" formFields={replyFields} initialValues={selectedRow} handleSubmit={handleSubmit}/>
             )}
-            {/* <ToastContainer />  */}
+            <ToastContainer /> 
         </div>
     )
 }

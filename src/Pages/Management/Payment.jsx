@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { CirclePlus, FilePenLine, Trash2, Archive } from "lucide-react";
 import { ActionButtons } from "../../components/UI/Button";
 import UserRegistrationForm from "./UserRegistration";
-
+import { ToastContainer, toast } from 'react-toastify';
 export default function Payments() {
     const [selectedRow, setSelectedRow] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -15,8 +15,7 @@ export default function Payments() {
     const [showAmount, setShowAmount] = useState(false);
     const [membershipPrice, setMembershipPrice] = useState(0);
     const [formData, setFormData] = useState({});
-    const [searchQuery, setSearchQuery] = useState('');
-    
+    const [searchQuery,setSearchQuery] = useState("");
 
     const columns = [
         { accessorKey: "user_name", header: "Name" },
@@ -111,21 +110,31 @@ export default function Payments() {
             return newData;
         });
     };
-
+    const paymentFormFields = [
+        { name: "user_id", label: "User ID", type: "number", required: true, disabled: selectedRow !==null },
+        { name: "membership_id", label: "Membership ID", type: "number", required: true, onChange: handleInputChange },
+        { name: "discount", label: "Discount", type: "number", required: false, onChange: handleInputChange },
+        { name: "paid_amount", label: "Paid Amount", type: "number", required: true, onChange: handleInputChange },
+        { name: "paid_date", label: "Paid Date", type: "date", required: true },
+        { name: "expire_date", label: "Expiry Date", type: "date", required: true }
+    ];
 
     useEffect(() => {
         fetchPayments();
     }, []);
+
     const handleSearch = (query) => {
         setSearchQuery(query);
       };
     
       const filteredData = searchQuery
       ? data.filter((payment) =>
-          payment.user_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          payment.user_name.toLowerCase().includes(searchQuery.toLowerCase()) ||         
               payment.paid_date.toLowerCase().includes(searchQuery.toLowerCase())
-          )
+          
+      )
       : data;
+
     const fetchPayments = async () => {
         try {
             const response = await apiRequest("payments", "GET");
@@ -165,6 +174,8 @@ export default function Payments() {
             } 
             else {
                 response = await apiRequest("payments", "POST", formData);
+                if(response)
+                    toast.success('Payment for the user added successfully!');
             }
 
             console.log("API Response:", response);
@@ -198,6 +209,7 @@ export default function Payments() {
                 <UserRegistrationForm isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} 
                     apiEndpoint="payments" formFields={paymentFormFields} initialValues={selectedRow} handleSubmit={handleSubmit}/>
             )}
+            <ToastContainer /> 
         </div>
     );
 }

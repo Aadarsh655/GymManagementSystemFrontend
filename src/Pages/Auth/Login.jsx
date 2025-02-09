@@ -9,6 +9,7 @@ import Input from "../../components/UI/Input";
 import Label from "../../components/UI/InputLabel";
 import ErrorAlert from "../../layouts/Error";
 import Logo from "../../components/UI/Logo";
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function LoginPage() {
   const navigate = useNavigate();

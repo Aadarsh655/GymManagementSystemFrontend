@@ -21,6 +21,8 @@ import UserRegistrationForm from "./Pages/Management/UserRegistration";
 import Payments from "./Pages/Management/Payment";
 import { Service } from "./Pages/Management/Service";
 import Enquiry from "./Pages/Management/Enquiry";
+import BlogLayout from "./Pages/Blogs/BlogPage";
+import BlogDetail from "./Pages/Blogs/BlogDetail";
 // Layout for website pages (with Navbar and Footer)
 function WebsiteLayout({ children }) {
   return (
@@ -38,7 +40,7 @@ function ManagementLayout({ children }) {
   return (
     <div className="flex min-h-screen"> {/* Flex container for sidebar and content */}
       <Sidebar />
-      <main className="flex-1 bg-gray-50 px-6 z-99999"> 
+      <main className="flex-1 bg-slate-100 px-6 z-99999"> 
         <Header />{/* Main content area */}
         {children}
       </main>
@@ -54,7 +56,8 @@ function App() {
       <Route path="/home" element={<WebsiteLayout><Home /></WebsiteLayout>} />
       <Route path="/pricing" element={<WebsiteLayout><Pricing /></WebsiteLayout>} />
       <Route path="/contact" element={<WebsiteLayout><Contact /></WebsiteLayout>} />
-      <Route path="/trainers" element={<WebsiteLayout><Trainer /></WebsiteLayout>} />
+      <Route path="/blogPage" element={<WebsiteLayout><BlogLayout /></WebsiteLayout>} />
+      <Route path="/blog/:slug" element={<WebsiteLayout><BlogDetail /></WebsiteLayout>} />
 
       {/* Authentication Pages */}
       <Route path="/login" element={<Login />} />

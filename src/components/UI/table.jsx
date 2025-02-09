@@ -6,21 +6,21 @@ const Table = React.forwardRef(({ className, ...props }, ref) => (
   <div className="relative w-full overflow-auto rounded-lg ">
     <table
       ref={ref}
-      className={cn("w-full caption-bottom text-sm", className)}
+      className={cn("w-full caption-bottom text-md", className)}
       {...props} />
   </div>
 ))
 Table.displayName = "Table"
 
 const TableHeader = React.forwardRef(({ className, ...props }, ref) => (
-  <thead ref={ref} className={cn("[&_tr]:border-b [&_th]:text-primary   bg-secondary mt-4", className)} {...props} />
+  <thead ref={ref} className={cn(" [&_th]:text-primary sticky  bg-secondary mt-4", className)} {...props} />
 ))
 TableHeader.displayName = "TableHeader"
 
 const TableBody = React.forwardRef(({ className, ...props }, ref) => (
   <tbody
     ref={ref}
-    className={cn("[&_tr:last-child]:border-0 bg-white ", className)}
+    className={cn(" bg-white ", className)}
     {...props} />
 ))
 TableBody.displayName = "TableBody"
@@ -48,7 +48,7 @@ const TableHead = React.forwardRef(({ className, ...props }, ref) => (
   <th
     ref={ref}
     className={cn(
-      "h-12 px-4 text-left text-xs align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0",
+      "h-12 px-4 text-left text-md align-middle font-normal text-muted-foreground [&:has([role=checkbox])]:pr-0",
       className
     )}
     {...props} />

@@ -6,16 +6,16 @@ import { cn } from "@/lib/utils";
 import { FaDumbbell } from "react-icons/fa6";
 
 const menuItems = [
-    { icon: <LayoutDashboard size={20} />, text: "Dashboard", to: "/dashboard" },
-    { icon: <UserCheck size={20} />, text: "Roles List", to: "/roles" },
-    { icon: <Users size={20} />, text: "User List", to: "/users" },
-    { icon: <Cog size={20} />, text: "Service", to: "/service" },
-    { icon: <CreditCard size={20} />, text: "Payments", to: "/payments" },
-    { icon: <FileText size={20} />, text: "Blogs", to: "/blog" },
-    { icon: <MessageSquare size={20} />, text: "Enquiries", to: "/enquiries" },
-    { icon: <Calendar size={20} />, text: "Attendance", to: "/attendance" },
-    { icon: <Package size={20} />, text: "Inventory", to: "/inventory" },
-    { icon: <Settings size={20} />, text: "Settings", to: "/settings" },
+    { icon: <LayoutDashboard size={22} />, text: "Dashboard", to: "/dashboard" },
+    { icon: <UserCheck size={22} />, text: "Roles List", to: "/roles" },
+    { icon: <Users size={22} />, text: "User List", to: "/users" },
+    { icon: <Cog size={22} />, text: "Service", to: "/service" },
+    { icon: <CreditCard size={22} />, text: "Payments", to: "/payments" },
+    { icon: <FileText size={22} />, text: "Blogs", to: "/blog" },
+    { icon: <MessageSquare size={22} />, text: "Enquiries", to: "/enquiries" },
+    { icon: <Calendar size={22} />, text: "Attendance", to: "/attendance" },
+    { icon: <Package size={22} />, text: "Inventory", to: "/inventory" },
+    { icon: <Settings size={22} />, text: "Settings", to: "/settings" },
 ];
 
 export default function Sidebar({ children }) {
@@ -45,19 +45,19 @@ export default function Sidebar({ children }) {
                         <button
                             onClick={() => setIsCollapsed(!isCollapsed)}
                             aria-label="Toggle Sidebar"
-                            className="rounded-lg bg-gray-50 hover:bg-gray-100 flex justify-center items-center w-10 h-10"
+                            className="rounded-lg bg-gray-50 border shadow-sm hover:bg-gray-100 flex justify-center items-center w-10 h-10"
                         >
                             {
                                 isCollapsed ? <FaDumbbell className="text-primary size-5"/> :
                                     <ChevronFirst
-                                        className={` transition-transform duration-300`}
+                                        className={`transition-transform duration-300`}
                                     />
                             }
                         </button>
                     </div>
 
                     {/* Sidebar Items */}
-                    <ul className="flex-1 px-3 py-4 space-y-1">
+                    <ul className="flex-1 text-xl px-3 py-4 space-y-3">
                         {menuItems.map((item, index) => (
                             <SidebarItem
                                 key={index}
@@ -76,8 +76,8 @@ export default function Sidebar({ children }) {
                             aria-label="Logout"
                             className="flex items-center gap-3 hover:text-primary text-gray-800"
                         >
-                            <LogOut size={20} />
-                            {!isCollapsed && <span>Logout</span>}
+                            <LogOut size={22} />
+                            {!isCollapsed && <span className="text-xl">Logout</span>}
                         </button>
                     </div>
 

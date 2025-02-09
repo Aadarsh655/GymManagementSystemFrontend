@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { PriceCard } from "../../layouts/PriceCard";
 import planImg from "../../assets/planning.jpg";
 import apiRequest from "@/api/axios";
-import { CheckCircle, XCircle } from "lucide-react"; // Import icons for tick and cross
+
 
 // Default facility list
 const defaultFacilities = [
@@ -69,7 +69,7 @@ export default function Pricing() {
       </div>
 
       {/* Pricing Cards */}
-      <div className="max-w-7xl mx-auto px-4 py-16">
+      <div className="max-w-7xl mx-auto py-16">
         {loading ? (
           <p className="text-center">Loading plans...</p>
         ) : error ? (

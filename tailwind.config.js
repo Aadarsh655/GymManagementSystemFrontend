@@ -22,6 +22,8 @@ export default {
 			  },
 			  secondary: {
 			   DEFAULT: "#FEF2F2" ,
+			   //#FEf2F2
+			   //#FEE2E2
 			  },
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',

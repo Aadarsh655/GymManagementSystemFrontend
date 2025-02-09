@@ -41,7 +41,7 @@ export default function Header() {
   }, []);
 
   return (
-    <div className="w-full sticky top-0 py-2 bg-gray-50">
+    <div className="w-full sticky top-0 py-2 bg-slate-100">
       <div className="flex items-center justify-between py-3 px-5 bg-white rounded-[12px]">
         <div>
           <h1 className="text-lg sm:text-xl font-medium">

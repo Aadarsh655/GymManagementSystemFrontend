@@ -114,8 +114,8 @@ export function DataTable({ columns, data, setSelectedRow, handleEdit }) {
   };
 
   return (
-    <div className="flex flex-col h-[70%]">
-      <div className="flex-grow overflow-auto rounded-md border bg-white">
+    <div className="flex flex-col bg-slate-100 h-[75%]">
+      <div className="flex-grow overflow-auto rounded-2xl bg-white">
         <Table className="h-full">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -167,7 +167,7 @@ export function DataTable({ columns, data, setSelectedRow, handleEdit }) {
           </TableBody>
         </Table>
       </div>
-      <div className="flex justify-between bg-white rounded-lg border items-center p-4 mt-4">
+      <div className="flex justify-between bg-slate-100 rounded-lg items-center mt-4 mb-4">
         <button
           className="px-3 py-1 bg-gray-200 text-gray-800 rounded"
           onClick={() => setPageIndex((prev) => Math.max(prev - 1, 0))}
@@ -192,9 +192,9 @@ export function DataTable({ columns, data, setSelectedRow, handleEdit }) {
         <select
           value={pageSize}
           onChange={(e) => setPageSize(Number(e.target.value))}
-          className="ml-4 border rounded px-2 py-1"
+          className="ml-4 border-primary rounded px-3 py-2"
         >
-          {[10, 20, 50].map((size) => (
+          {[20, 40, 50].map((size) => (
             <option key={size} value={size}>
               Show {size}
             </option>

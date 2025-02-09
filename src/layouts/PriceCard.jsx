@@ -7,8 +7,7 @@ export function PriceCard({ title, price, features }) {
       <div className="p-6">
         <h3 className="text-2xl font-bold text-center text-gray-800 mb-4">{title}</h3>
         <div className="text-center mb-6">
-          <span className="text-4xl font-bold text-gray-900">₹{price}</span>
-          <span className="text-xl font-semibold text-gray-600">/month</span>
+          <span className="text-4xl font-bold text-gray-900">NPR.{price}</span>
         </div>
 
         {/* Facilities List */}
