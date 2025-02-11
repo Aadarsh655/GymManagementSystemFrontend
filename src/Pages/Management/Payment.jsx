@@ -40,7 +40,7 @@ export default function Payments() {
     // ✅ Handle Editing Existing Payment
     const handleEdit = () => {
         if (!selectedRow) {
-            alert("Please select a row to edit.");
+            toast.warning("Please select a row to edit.");
             return;
         }
 
@@ -171,6 +171,8 @@ export default function Payments() {
 
             if (selectedRow?.payment_id) {  
                 response = await apiRequest(`payments/${selectedRow.payment_id}`, "PATCH", formData);
+                if(response)
+                    toast.success("Payment edited successfully!")
             } 
             else {
                 response = await apiRequest("payments", "POST", formData);

@@ -56,7 +56,7 @@ import { ToastContainer, toast } from 'react-toastify';
 
 const handleEdit = () => {
     if (!selectedRow) {
-        alert("Please select a row to edit.");
+        toast.warning("Please select a row to edit!")
         return;
     }
     console.log("Selected Row for Edit:", selectedRow);
@@ -96,6 +96,8 @@ const handleSubmit = async (formData, setError, setIsModalOpen) => {
             console.log("Form Data Sent:", Object.fromEntries(formDataToSend));
 
             response = await apiRequest(`register/${selectedRow.id}`, "POST", formDataToSend);
+            if(response)
+                toast.success("User edited successfully!")
 
         } else {
             response = await apiRequest("register", "POST", formDataToSend);

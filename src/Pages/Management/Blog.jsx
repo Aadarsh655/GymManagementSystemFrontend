@@ -54,12 +54,13 @@ export default function Blog(){
             let response;
     
             if (selectedRow?.id) {  
-                response = await apiRequest(`blog/${selectedRow.id}`, "PATCH", formDataToSend
-                );
+                response = await apiRequest(`blog/${selectedRow.id}`, "PATCH", formDataToSend);
+                toast.success("Blog edited successfully!")
             } else {
                 response = await apiRequest("blog", "POST", formDataToSend, {
                     headers: { "Content-Type": "multipart/form-data" }
                 });
+                toast.success("Blog created successfully!")
             }
     
             console.log("API Response:", response);
@@ -83,7 +84,7 @@ export default function Blog(){
 
     const handleEdit = () => {
         if (!selectedRow) {
-            alert("Please select a row to edit.");
+            toast.warning("Please select a row to edit.");
             return;
         }
 

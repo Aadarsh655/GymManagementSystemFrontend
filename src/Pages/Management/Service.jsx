@@ -5,6 +5,7 @@ import DataTable from "@/components/data-table/DataTable";
 import UserRegistrationForm from "./UserRegistration";
 import { CirclePlus, FilePenLine, Trash2, Archive } from "lucide-react";
 import { ActionButtons } from "../../components/UI/Button";
+import { ToastContainer, toast } from "react-toastify";
 
 export function Service() {
     const [selectedRow, setSelectedRow] = useState(null);
@@ -54,11 +55,12 @@ export function Service() {
     
             let response;
             if (selectedRow?.membership_id) {
-                // Update existing package
                 response = await apiRequest(`membership/${selectedRow.membership_id}`, "PATCH", formattedData);
+                if(response)
+                    toast.success("Package edited successfully!")
             } else {
-                // Create new package
                 response = await apiRequest("membership", "POST", formattedData);
+                toast.success("Package added successfully")
             }
     
             console.log("API Response:", response);
@@ -67,7 +69,7 @@ export function Service() {
             fetchService(); // Refresh data
     
         } catch (error) {
-            console.error("Error submitting:", error);
+            toast.error(error);
             setError(error.response?.data?.message || "An error occurred.");
         }
     };
@@ -82,7 +84,7 @@ export function Service() {
     // Open Form for Editing an Existing Package
     const handleEdit = () => {
         if (!selectedRow) {
-            alert("Please select a package to edit.");
+            toast.warning("Select a row to edit!")
             return;
         }
     
@@ -157,6 +159,7 @@ export function Service() {
                     handleSubmit={handleSubmit}
                 />
             )}
+            <ToastContainer />
         </div>
     );
 }

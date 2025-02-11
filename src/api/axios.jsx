@@ -13,10 +13,10 @@ const apiRequest = async (endpoint, method = "GET", body = null, token = null) =
   // Handle Content-Type based on request type
   if (body instanceof FormData) {
     headers["Content-Type"] = "multipart/form-data";
-    headers.Accept = "application/json"; // Explicitly set Accept header
+    //headers.Accept = "application/json"; // Explicitly set Accept header
   } else {
     headers["Content-Type"] = "application/json";
-    headers.Accept = "application/json";
+   // headers.Accept = "application/json";
   }
 
   try {
