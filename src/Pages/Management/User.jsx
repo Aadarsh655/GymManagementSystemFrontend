@@ -7,6 +7,7 @@ import {AddButton} from "../../components/UI/Button"
 import avatorImg from "../../assets/avator.png"
 import { CirclePlus, FilePenLine, Trash2, Archive } from "lucide-react";
 import { ActionButtons } from "../../components/UI/Button";
+import { ToastContainer, toast } from 'react-toastify';
 
  function User() {
     const [selectedRow, setSelectedRow] = useState(null);
@@ -95,17 +96,12 @@ const handleSubmit = async (formData, setError, setIsModalOpen) => {
             console.log("Form Data Sent:", Object.fromEntries(formDataToSend));
 
             response = await apiRequest(`register/${selectedRow.id}`, "POST", formDataToSend);
-            
-            // setFormData((prevData) =>
-            //     prevData.map((user) =>
-            //         user.id === selectedRow.id ? { ...user, ...Object.fromEntries(formDataToSend) } : user
-            //     )
-            // );
-            
+
         } else {
             response = await apiRequest("register", "POST", formDataToSend);
+            if(response)
+                toast.success('User registered successfully!');
         }
-
         console.log("API Response:", response);
         setError(null);
         setIsModalOpen(false);
@@ -234,6 +230,7 @@ const handleSubmit = async (formData, setError, setIsModalOpen) => {
                     handleSubmit={handleSubmit}
           />
         )}
+        <ToastContainer position ="top-right" className=" min-h-[130px] p-4 text-lg" /> 
       </div>
     );
 }
